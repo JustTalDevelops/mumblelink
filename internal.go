@@ -16,17 +16,17 @@ type mumbleData struct {
 	Version uint32
 	// Tick is used to make sure the connection is still alive, so it needs to be incremented every tick.
 	Tick uint32
-	// Avatar is the position of the avatar. This is the same as the Camera position for us, since this is Minecraft.
+	// Avatar is the position of the avatar, or player.
 	Avatar mumblePosition
 	// Name is the name of the link in runes, converted to uint16s.
 	Name [256]uint16
-	// Camera is the position of the camera. This is the same as the Avatar position for us, since this is Minecraft.
+	// Camera is the position of the camera.
 	Camera mumblePosition
 	// Identity is used to track the identity of the mumble user.
 	Identity [256]uint16
 	// ContextLength is always 48.
 	ContextLength uint32
-	// Context is used to make sure the only voices that get broadcast are those of the same identity. This should be the connected Minecraft server.
+	// Context is used to make sure the only voices that get broadcast are those of the same identity.
 	Context [256]byte
 	// Description is the description of the link.
 	Description [2048]uint16
