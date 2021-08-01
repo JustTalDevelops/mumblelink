@@ -1,4 +1,4 @@
-package main
+package mumblelink
 
 // stringTo256Uint16Slice converts a string to a uint16 slice that has a length of 256.
 func stringTo256Uint16Slice(input string) [256]uint16 {

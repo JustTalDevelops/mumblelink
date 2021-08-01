@@ -1,4 +1,4 @@
-package main
+package mumblelink
 
 // mumblePosition contains position info, which is used for both the avatar and the camera.
 type mumblePosition struct {
