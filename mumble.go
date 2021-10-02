@@ -2,6 +2,7 @@ package mumblelink
 
 import (
 	"github.com/go-gl/mathgl/mgl32"
+	"go.uber.org/atomic"
 	"syscall"
 	"time"
 	"unsafe"
@@ -29,6 +30,8 @@ type Mumble struct {
 	Context string
 	// Position is the position data sent over the link.
 	Position MumblePosition
+	// active is true if the mumble link is currently active.
+	active atomic.Bool
 }
 
 // Start starts ticking the Mumble instance on a goroutine. Any changes made will get broadcast on the next tick.
@@ -45,9 +48,15 @@ func (m *Mumble) Start() {
 			panic(err)
 		}
 
+		m.active.Store(true)
+
 		ticker := time.NewTicker(time.Second / 20)
 		defer ticker.Stop()
 		for range ticker.C {
+			if !m.active.Load() {
+				break
+			}
+
 			//goland:noinspection GoVetUnsafePointer
 			data := (*mumbleData)(unsafe.Pointer(addr))
 			if data == nil {
@@ -72,5 +81,12 @@ func (m *Mumble) Start() {
 			data.ContextLength = 48 // Always 48 for some reason?
 			data.Context = stringTo256ByteSlice(m.Context)
 		}
+
+		m.active.Store(false)
 	}()
+}
+
+// Close stops ticking the Mumble instance on the next tick and effectively closes the link.
+func (m *Mumble) Close() {
+	m.active.Store(false)
 }
